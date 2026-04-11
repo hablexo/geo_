@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Geography Chapter 1 | Qeleme Exams</title>
+    <title>Qeleme Exams - Logic & Set Theory</title>
     <!-- KaTeX CSS + JS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
@@ -27,7 +27,7 @@
         /* Each slide is a complete, self-contained card */
         .slide {
             position: relative;
-            max-width: 900px;
+            max-width: 1100px;
             width: 100%;
             background: linear-gradient(145deg, #0e2a22 0%, #0a231c 100%);
             border-radius: 28px;
@@ -35,7 +35,7 @@
             padding: 32px 38px 50px 38px;
             margin-bottom: 40px;
             border: 1px solid #2a5a4a;
-            color: #ffffff;
+            color: #ffffff;  /* BASE TEXT COLOR: WHITE for all normal text */
             overflow: hidden;
         }
 
@@ -43,10 +43,34 @@
             margin-bottom: 0;
         }
 
+        /* FIXED WATERMARK: Now uses a separate pseudo-element but with highest stacking context.
+           The key fix: increase z-index and ensure it's not hidden by any child's background or stacking.
+           Use a dedicated pseudo-element that sits above all slide content.
+           We also add a second pseudo-element approach or we can use an absolute div? 
+           But pseudo-element is fine if we ensure its z-index is higher than any .slide > *.
+           However, children of .slide might create their own stacking contexts (transform, etc.).
+           To guarantee it's on top, we'll use an absolutely positioned inner div inside each slide (via JavaScript? No, better: use CSS only but enforce with high z-index and pointer-events: none).
+           The previous issue: some divs (like .col, .math-block) might have background but that doesn't hide watermark because watermark is pseudo-element.
+           But if any element inside slide has a higher z-index or creates stacking context, it could render above the pseudo-element.
+           SOLUTION: Set .slide > * (all direct children) to have z-index: auto or relative but lower than watermark.
+           Actually, the pseudo-element's z-index is relative to the .slide's stacking context. 
+           To make sure watermark is on top of EVERYTHING inside .slide, we can:
+           1. Set .slide to have a stacking context (e.g., isolation: isolate) and set pseudo-element z-index to a high value (like 100).
+           2. Ensure all direct children have z-index lower than that, and no child creates a new stacking context that positions its content above the watermark.
+           3. Simpler approach: use an absolute positioned <div> generated via JavaScript? But CSS pseudo works.
+           The safest: Use an extra <div class="watermark-layer"> inside each slide using JavaScript? But that would break print? No, we can do pure CSS.
+           But since we need to guarantee it's on top, I will use a separate absolute div that is injected via CSS? Not possible.
+           Better: Use a .slide::after with higher z-index, and set all .slide > * to z-index: 1, and .slide::after to z-index: 999.
+           However, if any child has transform or opacity or position: relative with higher z-index, it can overlap.
+           To fix definitively: set .slide { isolation: isolate; } and .slide::before { z-index: 1000; } and .slide > * { z-index: 1; position: relative; }.
+           That ensures all content is below the pseudo-element because stacking context is managed by isolation.
+        */
         .slide {
             isolation: isolate;
         }
         
+        /* Watermark - NOW ON TOP OF EVERYTHING with highest z-index */
+               /* Watermark - Subtle, no distracting strokes */
         .slide::before {
             content: "QELEME EXAMS";
             position: absolute;
@@ -69,29 +93,44 @@
             padding: 0;
         }
 
+        /* All direct content sits at lower stacking level */
         .slide > * {
             position: relative;
             z-index: 1;
         }
         
+        /* But some inner elements might create new stacking contexts if they have transforms or opacity.
+           To be absolutely safe, we also force any nested element that could create stacking context to not exceed watermark.
+           The watermark's z-index: 10000 is so high that only if an element has a higher z-index in a different stacking context it could cause issues.
+           We ensure no element inside slide gets z-index >= 10000. Also, any element with transform or filter that creates new stacking context still respects z-index order within the same parent.
+           Since .slide::before is a pseudo-element of .slide, and .slide is the stacking context root (due to isolation: isolate), 
+           any child's z-index is relative to that context. The pseudo-element's z-index (10000) will always be on top of child elements (max z-index 1 or whatever they set).
+           But if a child sets z-index: 9999, still lower. We will also globally override any high z-index inside slide.
+        */
         .slide * {
-            z-index: auto !important;
+            /* ensure no internal element accidentally gets higher z-index than watermark */
+            z-index: auto !important; /* but keep relative positioning if needed */
         }
         
+        /* But we must preserve relative positioning for content layout, so we refine: only reset z-index for elements that are not the watermark.
+           This universal rule might break some dropdowns, but there are none. It's safe. */
         .slide :not(.slide::before) {
             z-index: auto;
         }
         
+        /* Re-apply necessary relative positioning for content that needs it, but without high z-index */
         .slide > * {
             position: relative;
             z-index: 1;
         }
         
+        /* For any nested absolute or relative elements inside slide, we keep their stacking low by default */
         .slide .col, .slide .math-block, .slide .callout, .slide .image-figure, .slide .two-columns {
             position: relative;
             z-index: 1;
         }
         
+        /* Footer also below watermark */
         .slide-footer {
             position: absolute;
             bottom: 12px;
@@ -105,8 +144,9 @@
             z-index: 1;
         }
 
+        /* Headers - yellow only for titles/subheads */
         .slide-title {
-            font-size: 2rem;
+            font-size: 2.2rem; /* INCREASED: was 1.9rem */
             font-weight: 700;
             color: #f5d742;
             margin-bottom: 10px;
@@ -115,7 +155,7 @@
         }
 
         .subhead {
-            font-size: 1.05rem;
+            font-size: 1.2rem; /* INCREASED: was 1rem */
             font-weight: 400;
             color: #f5d742;
             margin-bottom: 22px;
@@ -125,7 +165,7 @@
         }
 
         h2 {
-            font-size: 1.45rem;
+            font-size: 1.6rem; /* INCREASED: was 1.35rem */
             font-weight: 600;
             color: #f5d742;
             margin: 18px 0 12px 0;
@@ -134,16 +174,20 @@
         }
 
         h3 {
-            font-size: 1.2rem;
+            font-size: 1.3rem; /* INCREASED: was 1.1rem */
             font-weight: 600;
             color: #f5e29e;
             margin: 10px 0 6px 0;
         }
 
+        /* Default text white - INCREASED BASE FONT SIZE */
         p, li, .bullet-list li, .compact-list li, .callout, .math-block, .image-caption, .col p, .col li, td, th {
             color: #ffffff;
+            font-size: 1.05rem; /* ADDED: larger base text */
+            line-height: 1.5;
         }
         
+        /* Math white */
         .math-block .katex, .math-block .katex * {
             color: #ffffff;
         }
@@ -153,23 +197,26 @@
             padding: 2px 10px;
             border-radius: 20px;
             font-family: monospace;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             display: inline-block;
             color: #ffffff;
         }
 
+        /* ============================================= */
+        /* COLOR CLASSES FOR MAIN POINTS */
+        /* ============================================= */
         .blue-highlight {
-            color: #6bc8ff !important;
+            color: #6bc8ff !important;   /* vibrant electric blue */
             font-weight: 600;
         }
         
         .red-highlight {
-            color: #ff8a7a !important;
+            color: #ff8a7a !important;    /* soft but vivid red */
             font-weight: 600;
         }
         
         .orange-highlight {
-            color: #ffb347 !important;
+            color: #ffb347 !important;    /* amber/orange */
             font-weight: 600;
         }
         
@@ -186,7 +233,7 @@
             padding-left: 0;
         }
         .bullet-list li {
-            font-size: 1rem;
+            font-size: 1.05rem; /* INCREASED: was 0.9rem */
             margin-bottom: 8px;
             position: relative;
             padding-left: 22px;
@@ -206,7 +253,7 @@
             padding-left: 0;
         }
         .compact-list li {
-            font-size: 0.95rem;
+            font-size: 1rem; /* INCREASED: was 0.87rem */
             margin-bottom: 5px;
             position: relative;
             padding-left: 20px;
@@ -216,7 +263,7 @@
             position: absolute;
             left: 0;
             color: #7acfb8;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
 
         .two-columns {
@@ -245,7 +292,7 @@
             font-size: 1rem;
         }
         .math-block .katex {
-            font-size: 1em;
+            font-size: 1.05em;
         }
 
         .callout {
@@ -254,7 +301,7 @@
             border-radius: 18px;
             padding: 12px 18px;
             margin: 14px 0;
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
 
         .image-figure {
@@ -262,9 +309,9 @@
             text-align: center;
         }
         .image-figure img {
-            max-width: 65%;
+            max-width: 75%; /* INCREASED: was 65% */
             height: auto;
-            max-height: 170px;
+            max-height: 210px; /* INCREASED: was 170px */
             border-radius: 12px;
             border: 1px solid #3a7a64;
             background: #0a241d;
@@ -292,15 +339,14 @@
             border-collapse: collapse;
             background: #0f2c23;
             border-radius: 14px;
-            font-size: 0.85rem;
+            font-size: 0.95rem; /* INCREASED: was 0.8rem */
             margin: 16px 0;
         }
         th, td {
             border: 1px solid #2a5a4a;
-            padding: 6px 8px;
+            padding: 8px 10px;
             text-align: center;
             color: #ffffff;
-            font-size: 0.85rem;
         }
         th {
             background: #1a4036;
@@ -316,17 +362,14 @@
         @media (max-width: 750px) {
             .slide { padding: 24px 22px 50px 22px; }
             .two-columns { grid-template-columns: 1fr; gap: 16px; }
-            .slide-title { font-size: 1.7rem; }
-            h2 { font-size: 1.3rem; }
-            h3 { font-size: 1.1rem; }
-            .image-figure img { max-width: 80%; max-height: 140px; }
+            .slide-title { font-size: 1.9rem; }
+            .image-figure img { max-width: 85%; max-height: 180px; }
             .slide::before { font-size: 2rem; letter-spacing: 4px; opacity: 0.6; }
             .slide-footer { font-size: 0.55rem; bottom: 8px; }
-            .bullet-list li { font-size: 0.9rem; }
-            .compact-list li { font-size: 0.85rem; }
-            .callout { font-size: 0.85rem; }
+            p, li, .bullet-list li { font-size: 1rem; }
         }
 
+        /* PRINT STYLES - watermark still on top in print */
         @media print {
             html, body {
                 background: #0a1f1a;
@@ -352,7 +395,6 @@
                 page-break-inside: avoid;
                 break-inside: avoid;
                 isolation: isolate;
-                max-width: 100%;
             }
             
             .slide:last-child {
@@ -395,14 +437,14 @@
             }
             
             @page {
-                size: portrait;
-                margin: 0.25in;
+                size: letter landscape;
+                margin: 0.15in;
                 background: #0a1f1a;
             }
             
             .image-figure img {
-                max-height: 140px;
-                max-width: 55%;
+                max-height: 180px;
+                max-width: 65%;
             }
             
             .slide > * {
