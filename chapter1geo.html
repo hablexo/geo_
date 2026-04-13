@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Qeleme Exams - Logic & Set Theory | Clean Print & Mobile</title>
+    <title>Qeleme Exams - Logic & Set Theory</title>
     <!-- KaTeX CSS + JS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false},{left: '\\(', right: '\\)', display: false},{left: '\\[', right: '\\]', display: true}], throwOnError: false});"></script>
-    <style>
+<style>
         * {
             margin: 0;
             padding: 0;
@@ -26,7 +26,7 @@
 
         .slide {
             position: relative;
-            max-width: 850px;
+            max-width: 1100px;
             width: 100%;
             background: linear-gradient(145deg, #0e2a22 0%, #0a231c 100%);
             border-radius: 28px;
@@ -310,175 +310,134 @@
             margin: 0 2px;
         }
 
-        /* MOBILE FIX: larger fonts on small screens */
         @media (max-width: 750px) {
-            .slide { 
-                padding: 20px 18px 45px 18px; 
-            }
-            .two-columns { 
-                grid-template-columns: 1fr; 
-                gap: 16px; 
-            }
-            .slide-title { 
-                font-size: 1.8rem; 
-            }
-            .subhead {
-                font-size: 1rem;
-            }
-            h2 {
-                font-size: 1.4rem;
-            }
-            h3 {
-                font-size: 1.2rem;
-            }
-            p, li, .bullet-list li, .compact-list li, .callout, .math-block {
-                font-size: 1rem !important;
-            }
-            .bullet-list li {
-                font-size: 1rem !important;
-            }
-            .image-figure img { 
-                max-width: 90%; 
-                max-height: 170px; 
-            }
-            .slide::before { 
-                font-size: 1.8rem; 
-                letter-spacing: 4px; 
-                opacity: 0.5; 
-            }
-            .slide-footer { 
-                font-size: 0.5rem; 
-                bottom: 6px; 
-            }
-            table {
-                font-size: 0.85rem;
-            }
-            th, td {
-                padding: 6px 6px;
-            }
+            .slide { padding: 24px 22px 50px 22px; }
+            .two-columns { grid-template-columns: 1fr; gap: 16px; }
+            .slide-title { font-size: 1.9rem; }
+            .image-figure img { max-width: 85%; max-height: 180px; }
+            .slide::before { font-size: 2rem; letter-spacing: 4px; opacity: 0.6; }
+            .slide-footer { font-size: 0.55rem; bottom: 8px; }
+            p, li, .bullet-list li { font-size: 1rem; }
         }
 
-        /* PRINT STYLES - NO BACKGROUND, CLEAN SLIDES ONLY */
-        @media print {
-            /* Remove body background entirely */
-            body {
-                background: white !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-            
-            /* Remove background gradients and force clean white/light background for printing */
-            .slide {
-                position: relative;
-                background: white !important;
-                border: 1px solid #ccc !important;
-                box-shadow: none !important;
-                margin: 0 !important;
-                margin-bottom: 0 !important;
-                padding: 0.2in 0.3in 0.4in 0.3in !important;
-                border-radius: 0 !important;
-                page-break-after: always;
-                page-break-inside: avoid;
-                break-inside: avoid;
-                overflow: visible;
-                isolation: isolate;
-                color: black !important;
-                max-width: 100%;
-            }
-            
-            /* Force text to be black/dark for printing */
-            .slide, .slide p, .slide li, .slide .callout, .slide .math-block, 
-            .slide .col p, .slide .col li, td, th, .slide .compact-list li {
-                color: black !important;
-            }
-            
-            /* Headers keep yellow-ish but darker for print */
-            .slide-title, .subhead, h2, h3 {
-                color: #2a5a4a !important;
-            }
-            
-            /* Watermark - lighter for print */
-            .slide::before {
-                content: "QELEME EXAMS";
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%) rotate(-25deg);
-                font-size: 2.5rem;
-                font-weight: 800;
-                color: rgba(0, 0, 0, 0.08) !important;
-                white-space: nowrap;
-                letter-spacing: 6px;
-                z-index: 10000;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            
-            /* Remove colored backgrounds from boxes */
-            .col, .math-block, .callout, table {
-                background: #f5f5f5 !important;
-                border-color: #aaa !important;
-            }
-            
-            .slide-footer {
-                position: absolute;
-                bottom: 8px;
-                left: 0;
-                right: 0;
-                font-size: 0.5rem;
-                color: #666 !important;
-                text-align: center;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-                z-index: 1;
-            }
-            
-            /* Ensure all colors are printable */
-            * {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-                color-adjust: exact;
-            }
-            
-            /* Portrait page by default */
-            @page {
-                size: letter portrait;
-                margin: 0.15in;
-            }
-            
-            .image-figure img {
-                max-height: 160px;
-                max-width: 60%;
-            }
-            
-            .slide > * {
-                z-index: 1;
-                position: relative;
-            }
-            
-            /* Ensure each slide fits in one page */
-            .slide {
-                min-height: 9in;
-                height: auto;
-                page-break-after: always;
-                page-break-inside: avoid;
-            }
-            
-            /* Hide any body background color */
-            html {
-                background: white !important;
-            }
-        }
+        /* PRINT STYLES - each slide stays on ONE page (no cutting) */
+       /* PRINT STYLES - each slide stays on ONE page (no cutting) */
+@media print {
+    @page {
+        margin: 0;
+        size: auto;
+    }
+    
+    html, body {
+        background: #0a231c;
+        margin: 0;
+        padding: 0;
+    }
+    
+    body {
+        background: #0a231c;
+        padding: 0;
+    }
+    
+    .slide {
+        position: relative;
+        background: linear-gradient(145deg, #0e2a22 0%, #0a231c 100%);
+        border: none;  /* ← REMOVED BORDER FOR PRINT */
+        box-shadow: none;
+        margin: 0;
+        margin-bottom: 0;
+        padding: 0.35in 0.4in 0.55in 0.4in;
+        border-radius: 0;
+        page-break-after: always;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        overflow: visible;
+        isolation: isolate;
+    }
+    
+    .slide:last-child {
+        page-break-after: auto;
+    }
+    
+   .slide::before {
+        content: "QELEME EXAMS";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-25deg);
+        font-size: 3rem;
+        font-weight: 800;
+        color: rgba(91, 192, 168, 0.08);  /* ← Changed from 0.25 to 0.08 (much lighter) */
+        white-space: nowrap;
+        letter-spacing: 6px;
+        z-index: 10000;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    .slide-footer {
+        position: absolute;
+        bottom: 12px;
+        left: 0;
+        right: 0;
+        font-size: 0.55rem;
+        color: rgba(155, 199, 187, 0.6);
+        text-align: center;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        z-index: 1;
+    }
+    
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color-adjust: exact;
+    }
+    
+    .image-figure img {
+        max-height: 180px;
+        max-width: 65%;
+    }
+    
+    .slide > * {
+        z-index: 1;
+        position: relative;
+    }
+
+    /* Prevent headings from being left alone at the bottom of a page */
+    h1, h2, h3, h4, .slide-title, .subhead {
+        page-break-after: avoid;
+        page-break-inside: avoid;
+        break-after: avoid;
+    }
+
+    /* Keep headings with at least 3 lines of following content */
+    h2, h3, .slide-title {
+        orphans: 3;
+        widows: 3;
+    }
+
+    /* Prevent callouts, tables, and columns from breaking */
+    .callout, .math-block, table, .two-columns, .col {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    /* Ensure list items stay together when possible */
+    li {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    /* For long lists, allow breaks but keep minimum 3 items together */
+    ul, .bullet-list, .compact-list {
+        orphans: 3;
+        widows: 3;
+    }
+}
 
         .katex { color: #ffffff; }
         .katex .mord, .katex .mbin, .katex .mrel { color: #f0f9f5; }
-        
-        /* Print overrides for math color */
-        @media print {
-            .katex, .katex .mord, .katex .mbin, .katex .mrel {
-                color: black !important;
-            }
-        }
     </style>
 </head>
 <body>
